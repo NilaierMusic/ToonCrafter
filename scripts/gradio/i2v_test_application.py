@@ -60,7 +60,7 @@ class Image2Video():
             text_emb = model.module.get_learned_conditioning([prompt])
 
             # img cond
-            img_tensor = torch.from_numpy(image).permute(2, 0, 1).float().to(model.device)
+            img_tensor = torch.from_numpy(image).permute(2, 0, 1).float().to(model.module.device)
             img_tensor = (img_tensor / 255. - 0.5) * 2
 
             image_tensor_resized = transform(img_tensor) # 3,h,w
@@ -68,7 +68,7 @@ class Image2Video():
             
             videos = repeat(videos, 'b c t h w -> b c (repeat t) h w', repeat=frames//2)
             
-            img_tensor2 = torch.from_numpy(image2).permute(2, 0, 1).float().to(model.device)
+            img_tensor2 = torch.from_numpy(image2).permute(2, 0, 1).float().to(model.module.device)
             img_tensor2 = (img_tensor2 / 255. - 0.5) * 2
             image_tensor_resized2 = transform(img_tensor2) # 3,h,w
             videos2 = image_tensor_resized2.unsqueeze(0).unsqueeze(2) # bchw
@@ -87,7 +87,7 @@ class Image2Video():
 
             imtext_cond = torch.cat([text_emb, img_emb], dim=1)
 
-            fs = torch.tensor([fs], dtype=torch.long, device=model.device)
+            fs = torch.tensor([fs], dtype=torch.long, device=model.module.device)
             cond = {"c_crossattn": [imtext_cond], "fs": fs, "c_concat": [img_tensor_repeat]}
             
             ## inference
