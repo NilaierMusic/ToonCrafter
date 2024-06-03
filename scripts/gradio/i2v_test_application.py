@@ -121,7 +121,7 @@ class Image2Video():
     def get_latent_z_with_hidden_states(self, model, videos):
         b, c, t, h, w = videos.shape
         x = rearrange(videos, 'b c t h w -> (b t) c h w')
-        x = x.to(model.module.first_stage_model.encoder.conv_in.weight.dtype)  # Convert input to the same data type as model parameters
+        x = x.to(model.first_stage_model.encoder.conv_in.weight.dtype)  # Convert input to the same data type as model parameters
         encoder_posterior, hidden_states = model.first_stage_model.encode(x, return_hidden_states=True)
 
         hidden_states_first_last = []
